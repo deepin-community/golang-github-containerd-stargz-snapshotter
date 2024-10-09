@@ -1,0 +1,84 @@
+Index: golang-github-containerd-stargz-snapshotter/cmd/ctr-remote/commands/ipfs-push.go
+===================================================================
+--- golang-github-containerd-stargz-snapshotter.orig/cmd/ctr-remote/commands/ipfs-push.go
++++ golang-github-containerd-stargz-snapshotter/cmd/ctr-remote/commands/ipfs-push.go
+@@ -1,3 +1,6 @@
++//go:build debian_no_ipfs
++// +build debian_no_ipfs
++
+ /*
+    Copyright The containerd Authors.
+ 
+Index: golang-github-containerd-stargz-snapshotter/cmd/ctr-remote/commands/rpull.go
+===================================================================
+--- golang-github-containerd-stargz-snapshotter.orig/cmd/ctr-remote/commands/rpull.go
++++ golang-github-containerd-stargz-snapshotter/cmd/ctr-remote/commands/rpull.go
+@@ -29,7 +29,6 @@ import (
+ 	"github.com/containerd/containerd/snapshots"
+ 	fsconfig "github.com/containerd/stargz-snapshotter/fs/config"
+ 	"github.com/containerd/stargz-snapshotter/fs/source"
+-	"github.com/containerd/stargz-snapshotter/ipfs"
+ 	ocispec "github.com/opencontainers/image-spec/specs-go/v1"
+ 	"github.com/urfave/cli"
+ )
+@@ -55,10 +54,6 @@ command.
+ 			Usage: "Skip content verification for layers contained in this image.",
+ 		},
+ 		cli.BoolFlag{
+-			Name:  "ipfs",
+-			Usage: "Pull image from IPFS. Specify an IPFS CID as a reference. (experimental)",
+-		},
+-		cli.BoolFlag{
+ 			Name:  "use-containerd-labels",
+ 			Usage: "Use labels defined in containerd project",
+ 		},
+@@ -95,15 +90,6 @@ command.
+ 			config.skipVerify = true
+ 		}
+ 
+-		if context.Bool("ipfs") {
+-			r, err := ipfs.NewResolver(ipfs.ResolverOptions{
+-				Scheme: "ipfs",
+-			})
+-			if err != nil {
+-				return err
+-			}
+-			config.Resolver = r
+-		}
+ 		config.snapshotter = remoteSnapshotterName
+ 		if sn := context.String("snapshotter"); sn != "" {
+ 			config.snapshotter = sn
+Index: golang-github-containerd-stargz-snapshotter/cmd/containerd-stargz-grpc/main.go
+===================================================================
+--- golang-github-containerd-stargz-snapshotter.orig/cmd/containerd-stargz-grpc/main.go
++++ golang-github-containerd-stargz-snapshotter/cmd/containerd-stargz-grpc/main.go
+@@ -39,7 +39,6 @@ import (
+ 	"github.com/containerd/containerd/sys"
+ 	runtime_alpha "github.com/containerd/containerd/third_party/k8s.io/cri-api/pkg/apis/runtime/v1alpha2"
+ 	dbmetadata "github.com/containerd/stargz-snapshotter/cmd/containerd-stargz-grpc/db"
+-	ipfs "github.com/containerd/stargz-snapshotter/cmd/containerd-stargz-grpc/ipfs"
+ 	"github.com/containerd/stargz-snapshotter/fs"
+ 	"github.com/containerd/stargz-snapshotter/metadata"
+ 	memorymetadata "github.com/containerd/stargz-snapshotter/metadata/memory"
+@@ -174,9 +173,6 @@ func main() {
+ 		credsFuncs = append(credsFuncs, f, fAlpha)
+ 	}
+ 	fsOpts := []fs.Option{fs.WithMetricsLogLevel(logrus.InfoLevel)}
+-	if config.IPFS {
+-		fsOpts = append(fsOpts, fs.WithResolveHandler("ipfs", new(ipfs.ResolveHandler)))
+-	}
+ 	mt, err := getMetadataStore(*rootDir, config)
+ 	if err != nil {
+ 		log.G(ctx).WithError(err).Fatalf("failed to configure metadata store")
+Index: golang-github-containerd-stargz-snapshotter/cmd/ctr-remote/main.go
+===================================================================
+--- golang-github-containerd-stargz-snapshotter.orig/cmd/ctr-remote/main.go
++++ golang-github-containerd-stargz-snapshotter/cmd/ctr-remote/main.go
+@@ -36,7 +36,6 @@ func main() {
+ 		commands.OptimizeCommand,
+ 		commands.ConvertCommand,
+ 		commands.GetTOCDigestCommand,
+-		commands.IPFSPushCommand,
+ 	}
+ 	app := app.New()
+ 	for i := range app.Commands {

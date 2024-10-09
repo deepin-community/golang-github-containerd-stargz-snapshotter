@@ -1,5 +1,100 @@
-template-repository (1.0-1) unstable; urgency=medium
+golang-github-containerd-stargz-snapshotter (0.14.3-3) unstable; urgency=medium
 
-  * Initial release
+  * Exclude tests matching estargz/zstdchunked on riscv64
 
- -- Tsic404 <liuheng@deepin.org>  Sat, 28 Jan 2023 13:46:49 +0800
+ -- Reinhard Tartler <siretart@tauware.de>  Fri, 09 Aug 2024 14:57:16 -0400
+
+golang-github-containerd-stargz-snapshotter (0.14.3-2) unstable; urgency=medium
+
+  * Bump Standards-Version
+
+ -- Reinhard Tartler <siretart@tauware.de>  Thu, 08 Aug 2024 14:22:12 -0400
+
+golang-github-containerd-stargz-snapshotter (0.14.3-1) experimental; urgency=medium
+
+  * New upstream release
+
+ -- Reinhard Tartler <siretart@tauware.de>  Wed, 31 Jul 2024 07:29:12 -0400
+
+golang-github-containerd-stargz-snapshotter (0.12.0-2) unstable; urgency=medium
+
+  * Team upload
+  * Correct project name in Vcs-Browser and Vcs-Git
+  * Remove duplicate dependencies from the -dev package
+  * Build depend on golang-github-hashicorp-go-retryablehttp-dev
+
+ -- Benjamin Drung <bdrung@debian.org>  Tue, 13 Dec 2022 14:09:23 +0100
+
+golang-github-containerd-stargz-snapshotter (0.12.0-1) unstable; urgency=medium
+
+  * New upstream release
+  * restore ctr-remote binary
+
+ -- Reinhard Tartler <siretart@tauware.de>  Tue, 16 Aug 2022 09:18:48 +0200
+
+golang-github-containerd-stargz-snapshotter (0.11.4-2) unstable; urgency=medium
+
+  * Disable (experimental) ipfs support, sources not currently available
+    in debian. As a consequence, ctr-remote is no longer provided
+
+ -- Reinhard Tartler <siretart@tauware.de>  Tue, 17 May 2022 06:48:44 -0400
+
+golang-github-containerd-stargz-snapshotter (0.11.4-1) unstable; urgency=medium
+
+  * New upstream version 0.11.4
+
+ -- Reinhard Tartler <siretart@tauware.de>  Sat, 14 May 2022 11:57:41 -0400
+
+golang-github-containerd-stargz-snapshotter (0.8.0-9) unstable; urgency=medium
+
+  * unbreak autopkgtests
+
+ -- Reinhard Tartler <siretart@tauware.de>  Mon, 22 Nov 2021 15:32:44 -0500
+
+golang-github-containerd-stargz-snapshotter (0.8.0-8) unstable; urgency=medium
+
+  * Revert earlier attempts, avoid running those expensive tests on 32bit
+
+ -- Reinhard Tartler <siretart@tauware.de>  Sun, 21 Nov 2021 12:09:05 -0500
+
+golang-github-containerd-stargz-snapshotter (0.8.0-7) unstable; urgency=medium
+
+  * avoid more than 4 goroutines to avoid out of memory on 32bit architectures
+
+ -- Reinhard Tartler <siretart@tauware.de>  Sun, 21 Nov 2021 10:54:04 -0500
+
+golang-github-containerd-stargz-snapshotter (0.8.0-6) unstable; urgency=medium
+
+  * avoid more than 8 goroutines to avoid out of memory on 32bit architectures
+
+ -- Reinhard Tartler <siretart@tauware.de>  Sun, 21 Nov 2021 07:56:58 -0500
+
+golang-github-containerd-stargz-snapshotter (0.8.0-5) unstable; urgency=medium
+
+  * exclude tests that reach out to internet (Closes: #999440)
+
+ -- Reinhard Tartler <siretart@tauware.de>  Fri, 12 Nov 2021 07:57:26 -0500
+
+golang-github-containerd-stargz-snapshotter (0.8.0-4) unstable; urgency=medium
+
+  * debian/copyright: regenerate with cme update dpkg-copyright
+
+ -- Reinhard Tartler <siretart@tauware.de>  Sun, 07 Nov 2021 17:55:15 -0500
+
+golang-github-containerd-stargz-snapshotter (0.8.0-3) unstable; urgency=medium
+
+  * Add missing dependencies
+
+ -- Reinhard Tartler <siretart@tauware.de>  Sat, 06 Nov 2021 11:49:58 -0400
+
+golang-github-containerd-stargz-snapshotter (0.8.0-2) unstable; urgency=medium
+
+  * no-change reupload
+
+ -- Reinhard Tartler <siretart@tauware.de>  Sat, 06 Nov 2021 11:11:24 -0400
+
+golang-github-containerd-stargz-snapshotter (0.8.0-1) unstable; urgency=medium
+
+  * Initial release (Closes: #994908)
+
+ -- Reinhard Tartler <siretart@tauware.de>  Sun, 26 Sep 2021 12:08:24 -0400
