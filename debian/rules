@@ -1,4 +1,28 @@
 #!/usr/bin/make -f
 
+# NB: the /service modules contain a number of k8s related dependencies
+# that are not (currently) packaged in debian for use by other packages.
+# As of version 0.8.0, this excludes the programs containerd-stargz-grpc
+# and stargz-core, which are excluded from building in the following
+export DH_GOLANG_EXCLUDES := stargz-snapshotter/service cmd/containerd-stargz-grpc cmd/stargz-store ipfs
+
+# exclude tests that reach out to internet #999440
+EXTRA_TEST_EXCLUDES := nativeconverter
+
 %:
-	dh $@
+	dh $@ --builddirectory=_build --buildsystem=golang --with=golang
+
+# on 32bit architectures, exclude a problematic test
+ifneq ($(DEB_HOST_ARCH_BITS),32)
+else
+EXTRA_TEST_EXCLUDES += estargz/zstdchunked
+endif
+
+# riscv64 is too slow
+ifneq ($(DEB_HOST_ARCH),riscv64)
+else
+EXTRA_TEST_EXCLUDES += estargz/zstdchunked
+endif
+
+override_dh_auto_test:
+	DH_GOLANG_EXCLUDES="$(DH_GOLANG_EXCLUDES) $(EXTRA_TEST_EXCLUDES)" GOMAXPROCS=4 dh_auto_test -v --max-parallel=2
